@@ -1,58 +1,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "longest_axis.h"
 #include "raylib.h"
 #include "../renderable/renderable.h"
 #include "bvh.h"
 
-int compareX(const void *a, const void *b)
+BoundingBox expand_aabb(BoundingBox a, BoundingBox b)
 {
-
-    Renderable *renderable_a = (Renderable *)a;
-    Renderable *renderable_b = (Renderable *)b;
-
-    return renderable_a->centroid.x - renderable_b->centroid.x;
-}
-
-int compareY(const void *a, const void *b)
-{
-
-    Renderable *renderable_a = (Renderable *)a;
-    Renderable *renderable_b = (Renderable *)b;
-
-    return renderable_a->centroid.y - renderable_b->centroid.y;
-}
-
-int compareZ(const void *a, const void *b)
-{
-
-    Renderable *renderable_a = (Renderable *)a;
-    Renderable *renderable_b = (Renderable *)b;
-
-    return renderable_a->centroid.z - renderable_b->centroid.z;
-}
-
-qsort_compare compare_by_longest_axis(BoundingBox scene_aabb)
-{
-    // We need to determine the longest axis of the scene_aabb BoundingBox.
-    // The bounding box gives two 3D cartesian points, min and max.
-    // There are three axis to consider: x, y, z.
-    float x_distance = scene_aabb.max.x - scene_aabb.min.x;
-    float y_distance = scene_aabb.max.y - scene_aabb.min.y;
-    float z_distance = scene_aabb.max.z - scene_aabb.min.z;
-
-    if (x_distance > y_distance && x_distance > z_distance)
-    {
-        return compareX;
-    }
-    if (y_distance > x_distance && y_distance > z_distance)
-    {
-        return compareY;
-    }
-    return compareZ;
-}
-
-BoundingBox expand_aabb(BoundingBox a, BoundingBox b) {
     BoundingBox result;
 
     // For each dimension, the lower bound of the result is the minimum of the lower bounds of a and b.
@@ -68,19 +23,21 @@ BoundingBox expand_aabb(BoundingBox a, BoundingBox b) {
     return result;
 }
 
-// Draws a Bounding Volume Hierarchy without using a BVH tree.
-// For learning purposes.
-void draw_bvh_aabb(Renderable *renderable, size_t renderable_size, BoundingBox scene_aabb)
+BVH_Node *build_bvh_tree_impl(Renderable *renderable, size_t renderable_size, BoundingBox bounding_box)
 {
 
     if (renderable_size < 2)
-        return;
+    {
+        return NULL;
+    }
 
-    DrawBoundingBox(scene_aabb, BLACK);
+    // Create the new node for the BVH tree
+    BVH_Node *new_node = malloc(sizeof(BVH_Node));
+    new_node->bounding_box = bounding_box;
 
     // Sort the renderables by the longest axis.
     Renderable *axis_sorted = memcpy(malloc(sizeof(Renderable) * renderable_size), renderable, sizeof(Renderable) * renderable_size);
-    qsort(axis_sorted, renderable_size, sizeof(Renderable), compare_by_longest_axis(scene_aabb));
+    qsort(axis_sorted, renderable_size, sizeof(Renderable), compare_by_longest_axis(bounding_box));
 
     // Find the median of the renderables.
     size_t median = renderable_size / 2;
@@ -89,22 +46,49 @@ void draw_bvh_aabb(Renderable *renderable, size_t renderable_size, BoundingBox s
     // Calculate the left AABB.
     // It should contain all renderables from 0 to median.
     BoundingBox left_aabb = get_renderable_bounding_box(median_renderable);
-    for (size_t i = 0; i <= median; i++) {
+    for (size_t i = 0; i <= median; i++)
+    {
         left_aabb = expand_aabb(left_aabb, get_renderable_bounding_box(axis_sorted[i]));
     }
 
     // Calculate the right AABB.
     // It should contain all renderables from median to renderable_size.
     BoundingBox right_aabb = get_renderable_bounding_box(median_renderable);
-    for (size_t i = median + 1; i < renderable_size; i++) {
+    for (size_t i = median + 1; i < renderable_size; i++)
+    {
         right_aabb = expand_aabb(right_aabb, get_renderable_bounding_box(axis_sorted[i]));
     }
-    
 
     // Recurse on the left and right AABBs.
-    draw_bvh_aabb(axis_sorted, median, left_aabb);
-    draw_bvh_aabb(axis_sorted + median, renderable_size - median, right_aabb);
-
+    new_node->left = build_bvh_tree_impl(axis_sorted, median, left_aabb);
+    new_node->right = build_bvh_tree_impl(axis_sorted + median, renderable_size - median, right_aabb);
 
     free(axis_sorted);
+
+    return new_node;
+}
+
+BVH_Tree *build_bvh_tree(struct Renderable *renderable, size_t renderable_size, struct BoundingBox scene_aabb)
+{
+    BVH_Tree *tree = malloc(sizeof(BVH_Tree));
+    tree->root = build_bvh_tree_impl(renderable, renderable_size, scene_aabb);
+    return tree;
+}
+
+void draw_bvh_tree_impl(BVH_Node *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+
+    DrawBoundingBox(node->bounding_box, BLACK);
+
+    draw_bvh_tree_impl(node->left);
+    draw_bvh_tree_impl(node->right);
+}
+
+void draw_bvh_tree(BVH_Tree *tree)
+{
+    draw_bvh_tree_impl(tree->root);
 }

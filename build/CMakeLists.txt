@@ -3,7 +3,7 @@ project(3d-bvh-tree)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(game ../src/main.c ../src/bvh/bvh.c ../src/camera/camera.c ../src/renderable/renderable.c ../src/scene/scene.c)
+add_executable(game ../src/main.c ../src/bvh/bvh.c ../src/camera/camera.c ../src/renderable/renderable.c ../src/scene/scene.c ../src/bvh/longest_axis.c)
 
 include_directories(../lib/raylib/src)
 

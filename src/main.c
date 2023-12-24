@@ -19,6 +19,7 @@ int main(void)
 
     Camera camera = create_camera();
     Renderable *renderables = create_scene();
+    BVH_Tree *tree = build_bvh_tree(renderables, RENDERABLE_COUNT, SCENE_AABB);
 
     while (!WindowShouldClose())
     {
@@ -31,9 +32,9 @@ int main(void)
         BeginMode3D(camera);
 
         // DrawGrid(1000, 1.0f);
+        draw_bvh_tree(tree);
 
         draw_scene(renderables);
-        draw_bvh_aabb(renderables, RENDERABLE_COUNT, SCENE_AABB);
 
         EndMode3D();
         EndDrawing();
