@@ -3,8 +3,6 @@
 #include "../renderable/renderable.h"
 #include "bvh.h"
 
-BVH_Node *build_bvh_tree_impl(Renderable*, size_t, BoundingBox);
-
 BVH_Tree *build_bvh_tree(Renderable *renderable, size_t renderable_size, BoundingBox scene_aabb)
 {
     BVH_Tree *tree = malloc(sizeof(BVH_Tree));
