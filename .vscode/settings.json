@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "raylib.h": "c",
+        "scene.h": "c",
+        "__node_handle": "c",
+        "bvh.h": "c",
+        "renderable.h": "c",
+        "limits": "c",
+        "ratio": "c",
+        "algorithm": "c",
+        "camera.h": "c"
+    }
+}
