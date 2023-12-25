@@ -1,7 +1,7 @@
 # Bounding Volume Hierarchy, Raycasting
 
 
-Raytracing via BVH Tree Collision Detection:
+Raycasting via BVH Tree Collision Detection:
 
 https://github.com/bens-schreiber/3D-BVH-Raytracing/assets/64621941/70df6d9a-6116-48ce-a58d-06cfd1a04277
 
