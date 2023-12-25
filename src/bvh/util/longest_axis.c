@@ -1,32 +1,32 @@
 #include "raylib.h"
 #include "longest_axis.h"
-#include "../renderable/renderable.h"
+#include "../../primitive/primitive.h"
 
 int compareX(const void *a, const void *b)
 {
 
-    Renderable *renderable_a = (Renderable *)a;
-    Renderable *renderable_b = (Renderable *)b;
+    Primitive *primitive_a = (Primitive *)a;
+    Primitive *primitive_b = (Primitive *)b;
 
-    return renderable_a->centroid.x - renderable_b->centroid.x;
+    return primitive_a->centroid.x - primitive_b->centroid.x;
 }
 
 int compareY(const void *a, const void *b)
 {
 
-    Renderable *renderable_a = (Renderable *)a;
-    Renderable *renderable_b = (Renderable *)b;
+    Primitive *primitive_a = (Primitive *)a;
+    Primitive *primitive_b = (Primitive *)b;
 
-    return renderable_a->centroid.y - renderable_b->centroid.y;
+    return primitive_a->centroid.y - primitive_b->centroid.y;
 }
 
 int compareZ(const void *a, const void *b)
 {
 
-    Renderable *renderable_a = (Renderable *)a;
-    Renderable *renderable_b = (Renderable *)b;
+    Primitive *primitive_a = (Primitive *)a;
+    Primitive *primitive_b = (Primitive *)b;
 
-    return renderable_a->centroid.z - renderable_b->centroid.z;
+    return primitive_a->centroid.z - primitive_b->centroid.z;
 }
 
 qsort_compare compare_by_longest_axis(BoundingBox scene_aabb)

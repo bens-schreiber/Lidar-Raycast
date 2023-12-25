@@ -1,26 +1,30 @@
 #include <stdlib.h>
 #include "raylib.h"
-#include "../renderable/renderable.h"
+#include "../primitive/primitive.h"
 #include "scene.h"
 
-Renderable *create_scene(void)
+// Creates a scene with PRIMITIVE_COUNT number of primitives
+// Randomly places them within the SCENE_BOUNDING_BOX
+//
+// Returns a pointer to the array of primitives
+Primitive *create_scene(void)
 {
-    Renderable *renderables = malloc(sizeof(Renderable) * RENDERABLE_COUNT);
-    for (int i = 0; i < RENDERABLE_COUNT; i++)
+    Primitive *primitives = malloc(sizeof(Primitive) * PRIMITIVE_COUNT);
+    for (int i = 0; i < PRIMITIVE_COUNT; i++)
     {
-        const int x = GetRandomValue(SCENE_AABB.min.x + RENDERABLE_DIMENSIONS.x, SCENE_AABB.max.x - RENDERABLE_DIMENSIONS.x);
-        const int y = GetRandomValue(SCENE_AABB.min.y + RENDERABLE_DIMENSIONS.y, SCENE_AABB.max.y - RENDERABLE_DIMENSIONS.x);
-        const int z = GetRandomValue(SCENE_AABB.min.z + RENDERABLE_DIMENSIONS.z, SCENE_AABB.max.z - RENDERABLE_DIMENSIONS.x);
+        const int x = GetRandomValue(SCENE_BOUNDING_BOX.min.x + PRIMITIVE_DIMENSIONS.x, SCENE_BOUNDING_BOX.max.x - PRIMITIVE_DIMENSIONS.x);
+        const int y = GetRandomValue(SCENE_BOUNDING_BOX.min.y + PRIMITIVE_DIMENSIONS.y, SCENE_BOUNDING_BOX.max.y - PRIMITIVE_DIMENSIONS.x);
+        const int z = GetRandomValue(SCENE_BOUNDING_BOX.min.z + PRIMITIVE_DIMENSIONS.z, SCENE_BOUNDING_BOX.max.z - PRIMITIVE_DIMENSIONS.x);
         Vector3 centroid = (Vector3){x, y, z};
-        renderables[i] = create_renderable(centroid, RED);
+        primitives[i] = create_primitive(centroid, RED);
     }
-    return renderables;
+    return primitives;
 }
 
-void draw_scene(Renderable renderables[RENDERABLE_COUNT])
+void draw_scene(Primitive primitives[PRIMITIVE_COUNT])
 {
-    for (int i = 0; i < RENDERABLE_COUNT; i++)
+    for (int i = 0; i < PRIMITIVE_COUNT; i++)
     {
-        draw_renderable(renderables[i]);
+        draw_primitive(primitives[i]);
     }
 }

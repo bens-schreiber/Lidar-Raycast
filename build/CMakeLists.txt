@@ -3,7 +3,13 @@ project(3d-bvh-tree)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(game ../src/main.c ../src/bvh/bvh.c ../src/bvh/bvh_build_impl.c ../src/camera/camera.c ../src/renderable/renderable.c ../src/scene/scene.c ../src/bvh/longest_axis.c)
+file(GLOB_RECURSE SOURCES ../src/*.c)
+
+foreach(SOURCE ${SOURCES})
+    message("Found source file: ${SOURCE}")
+endforeach()
+
+add_executable(game ${SOURCES})
 
 include_directories(../lib/raylib/src)
 

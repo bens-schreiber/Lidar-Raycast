@@ -1,19 +1,22 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#define RENDERABLE_COUNT 5
+// How many primitives are in the scene
+#define PRIMITIVE_COUNT 30
 
-struct Renderable;
+struct Primitive;
 struct BoundingBox;
+struct Vector3;
 
-#define SCENE_AABB                                       \
-    (BoundingBox)                                        \
-    {                                                    \
-        (Vector3){-20, 0, -20}, (Vector3) { 20, 20, 20 } \
+// Size of the scene
+#define SCENE_BOUNDING_BOX                                             \
+    (struct BoundingBox)                                               \
+    {                                                                  \
+        (struct Vector3){-10, 0, -10}, (struct Vector3) { 10, 10, 10 } \
     }
 
-Renderable *create_scene(void);
+struct Primitive *create_scene(void);
 
-void draw_scene(Renderable renderables[RENDERABLE_COUNT]);
+void draw_scene(struct Primitive primitives[PRIMITIVE_COUNT]);
 
 #endif // SCENE_H
