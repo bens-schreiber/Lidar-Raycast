@@ -1,4 +1,4 @@
-# Bounding Volume Hierarchy, Raytracing
+# Bounding Volume Hierarchy, Raycasting
 
 
 Raytracing via BVH Tree Collision Detection:
