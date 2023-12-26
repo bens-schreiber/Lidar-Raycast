@@ -9,6 +9,11 @@
         "ratio": "c",
         "algorithm": "c",
         "camera.h": "c",
-        "primitive.h": "c"
+        "primitive.h": "c",
+        "lidar.h": "c",
+        "rlgl.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c",
+        "consts.h": "c"
     }
 }

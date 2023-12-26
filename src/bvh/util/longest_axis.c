@@ -31,9 +31,6 @@ int compareZ(const void *a, const void *b)
 
 qsort_compare compare_by_longest_axis(BoundingBox scene_aabb)
 {
-    // We need to determine the longest axis of the scene_aabb BoundingBox.
-    // The bounding box gives two 3D cartesian points, min and max.
-    // There are three axis to consider: x, y, z.
     float x_distance = scene_aabb.max.x - scene_aabb.min.x;
     float y_distance = scene_aabb.max.y - scene_aabb.min.y;
     float z_distance = scene_aabb.max.z - scene_aabb.min.z;

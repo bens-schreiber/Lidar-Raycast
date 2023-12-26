@@ -1,22 +1,25 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-// How many primitives are in the scene
+/// Amount of primitives to be rendered
 #define PRIMITIVE_COUNT 100
 
-struct Primitive;
-struct BoundingBox;
-struct Vector3;
-
-// Size of the scene
+/// Enclosing bounding box of the entire scene.
+/// All primitives will be rendered within this box.
 #define SCENE_BOUNDING_BOX                                             \
     (struct BoundingBox)                                               \
     {                                                                  \
         (struct Vector3){-10, 0, -10}, (struct Vector3) { 10, 10, 10 } \
     }
 
-struct Primitive *create_scene(void);
+struct Primitive;
+struct BoundingBox;
+struct Vector3;
 
-void draw_scene(struct Primitive primitives[PRIMITIVE_COUNT]);
+/// Creates a list of PRIMITIVE_COUNT primitives with centroids within SCENE_BOUNDING_BOX.
+struct Primitive *scene_create(void);
+
+/// Renders all primitives in the scene around their centroids.
+void scene_draw(struct Primitive primitives[PRIMITIVE_COUNT]);
 
 #endif // SCENE_H

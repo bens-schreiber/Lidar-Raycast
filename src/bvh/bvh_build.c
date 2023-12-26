@@ -18,21 +18,21 @@ void free_bvh_node(BVH_Node *node)
     free(node);
 }
 
-void free_bvh_tree(BVH_Tree *tree)
+void bvh_tree_free(BVH_Tree *tree)
 {
     free_bvh_node(tree->root);
     free(tree);
 }
-// Creates a BVH Tree from the given primitives, and the scenes bounding box
-BVH_Tree *build_bvh_tree(const Primitive *primitives, size_t primitives_size, BoundingBox scene_aabb)
+
+BVH_Tree *bvh_tree_create(const Primitive *primitives, size_t primitives_size, BoundingBox scene_aabb)
 {
     BVH_Tree *tree = malloc(sizeof(BVH_Tree));
-    tree->root = build_bvh_tree_impl(primitives, primitives_size, scene_aabb);
+    tree->root = bvh_tree_create_impl(primitives, primitives_size, scene_aabb);
     return tree;
 }
 
-// Expands a bounding box of a to contain b
-// Returns the expanded bounding box
+/// @brief Expands a bounding box to contain another bounding box
+/// @return The expanded bounding box containing both a and b
 BoundingBox expand_aabb(BoundingBox a, BoundingBox b)
 {
     BoundingBox result;
@@ -50,8 +50,9 @@ BoundingBox expand_aabb(BoundingBox a, BoundingBox b)
     return result;
 }
 
-// Creates a BVH node from the given primitives and bounding box
-BVH_Node *create_bvh_node(const Primitive *primitives, size_t primitives_size, BoundingBox bounding_box)
+/// @brief Creates a BVH node from the given primitives and bounding box
+/// @return A pointer to the new BVH node
+BVH_Node *bvh_node_create(const Primitive *primitives, size_t primitives_size, BoundingBox bounding_box)
 {
     BVH_Node *new_node = malloc(sizeof(BVH_Node));
     new_node->bounding_box = bounding_box;
@@ -78,7 +79,7 @@ BVH_Node *create_bvh_node(const Primitive *primitives, size_t primitives_size, B
     return new_node;
 }
 
-BVH_Node *build_bvh_tree_impl(const Primitive *primitives, size_t primitives_size, BoundingBox bounding_box)
+BVH_Node *bvh_tree_create_impl(const Primitive *primitives, size_t primitives_size, BoundingBox bounding_box)
 {
 
     // If there are less than 2 primitives, the BVH node should be a leaf node, and contain the primitives.
@@ -87,7 +88,7 @@ BVH_Node *build_bvh_tree_impl(const Primitive *primitives, size_t primitives_siz
         return NULL;
     }
 
-    BVH_Node *new_node = create_bvh_node(primitives, primitives_size, bounding_box);
+    BVH_Node *new_node = bvh_node_create(primitives, primitives_size, bounding_box);
 
     // Sort the primitivess by the longest axis.
     Primitive *axis_sorted = memcpy(malloc(sizeof(Primitive) * primitives_size), primitives, sizeof(Primitive) * primitives_size);
@@ -99,23 +100,23 @@ BVH_Node *build_bvh_tree_impl(const Primitive *primitives, size_t primitives_siz
 
     // Calculate the left AABB.
     // It should contain all primitivess from 0 to median.
-    BoundingBox left_aabb = get_primitive_bounding_box(median_primitives);
+    BoundingBox left_aabb = primitive_get_bounding_box(median_primitives);
     for (size_t i = 0; i <= median; i++)
     {
-        left_aabb = expand_aabb(left_aabb, get_primitive_bounding_box(axis_sorted[i]));
+        left_aabb = expand_aabb(left_aabb, primitive_get_bounding_box(axis_sorted[i]));
     }
 
     // Calculate the right AABB.
     // It should contain all primitivess from median to primitives_size.
-    BoundingBox right_aabb = get_primitive_bounding_box(median_primitives);
+    BoundingBox right_aabb = primitive_get_bounding_box(median_primitives);
     for (size_t i = median + 1; i < primitives_size; i++)
     {
-        right_aabb = expand_aabb(right_aabb, get_primitive_bounding_box(axis_sorted[i]));
+        right_aabb = expand_aabb(right_aabb, primitive_get_bounding_box(axis_sorted[i]));
     }
 
     // Recurse on the left and right AABBs.
-    new_node->left = build_bvh_tree_impl(axis_sorted, median, left_aabb);
-    new_node->right = build_bvh_tree_impl(axis_sorted + median, primitives_size - median, right_aabb);
+    new_node->left = bvh_tree_create_impl(axis_sorted, median, left_aabb);
+    new_node->right = bvh_tree_create_impl(axis_sorted + median, primitives_size - median, right_aabb);
 
     free(axis_sorted);
 

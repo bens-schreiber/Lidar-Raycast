@@ -3,19 +3,32 @@
 
 #include "raylib.h"
 
-#define PRIMITIVE_DIMENSIONS (Vector3){1.0f, 1.0f, 1.0f}
+#define PRIMITIVE_DIMENSIONS \
+    (Vector3) { 1.0f, 1.0f, 1.0f }
 
-// Some geometric primitive that can be rendered (e.g. a cube)
+/// Some geometric primitive that can be rendered (e.g. a cube)
+/// @param centroid: the center of the primitive, rendered around this point
+/// @param color: the whole color of the primitive
 typedef struct Primitive
 {
     Vector3 centroid;
     Color color;
 } Primitive;
 
-BoundingBox get_primitive_bounding_box(Primitive primitive);
+/// @returns The bounding box enclosing a primitive
+BoundingBox primitive_get_bounding_box(Primitive primitive);
 
-Primitive create_primitive(Vector3 centroid, Color color);
+/// Create a primitive
+/// @param centroid: the center of the primitive, rendered around this point
+static inline Primitive primitive_create(Vector3 centroid, Color color)
+{
+    return (Primitive){centroid, color};
+}
 
-void draw_primitive(Primitive primitive);
+/// Render a primitive around its centroid
+static inline void primitive_draw(Primitive primitive)
+{
+    DrawCubeV(primitive.centroid, PRIMITIVE_DIMENSIONS, primitive.color);
+}
 
 #endif // PRIMITIVE_H

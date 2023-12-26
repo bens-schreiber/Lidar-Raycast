@@ -3,7 +3,6 @@
 #include "../primitive/primitive.h"
 #include "bvh.h"
 
-// DFS, draw each bounding box and primitives if they exist
 void draw_bvh_tree_impl(BVH_Node *node)
 {
     if (node == NULL)
@@ -15,8 +14,8 @@ void draw_bvh_tree_impl(BVH_Node *node)
 
     for (size_t i = 0; i < node->primitives_size; i++)
     {
-        draw_primitive(node->primitives[i]);
-        DrawBoundingBox(get_primitive_bounding_box(node->primitives[i]), BLACK);
+        primitive_draw(node->primitives[i]);
+        DrawBoundingBox(primitive_get_bounding_box(node->primitives[i]), BLACK);
     }
 
     draw_bvh_tree_impl(node->left);
