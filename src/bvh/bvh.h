@@ -1,10 +1,11 @@
 #ifndef BVH_H
 #define BVH_H
 
+#include <stddef.h>
+
 struct Primitive;
 struct BoundingBox;
 struct Ray;
-typedef size_t size_t;
 
 /// @brief A node in a BVH tree
 /// @param left: the left child of the node
