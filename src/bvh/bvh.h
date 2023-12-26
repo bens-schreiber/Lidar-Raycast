@@ -26,6 +26,9 @@ BVH_Tree *build_bvh_tree(const struct Primitive *primitives, size_t primitives_s
 
 BVH_Node *build_bvh_tree_impl(const struct Primitive *primitives, size_t primitives_size, struct BoundingBox bounding_box);
 
+// Frees the memory allocated for a BVH tree
+void free_bvh_tree(BVH_Tree *tree);
+
 // Checks for collisions between a bounding box and a BVH tree.
 // Returns 1 if there is a collision, 0 otherwise.
 unsigned char check_bvh_collision(const BVH_Tree *tree, struct BoundingBox bounding_box);

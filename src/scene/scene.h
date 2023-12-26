@@ -2,7 +2,7 @@
 #define SCENE_H
 
 // How many primitives are in the scene
-#define PRIMITIVE_COUNT 30
+#define PRIMITIVE_COUNT 100
 
 struct Primitive;
 struct BoundingBox;

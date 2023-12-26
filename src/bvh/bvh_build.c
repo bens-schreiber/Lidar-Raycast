@@ -6,6 +6,23 @@
 #include "../primitive/primitive.h"
 #include "bvh.h"
 
+void free_bvh_node(BVH_Node *node)
+{
+    if (node == NULL)
+    {
+        return;
+    }
+
+    free_bvh_node(node->left);
+    free_bvh_node(node->right);
+    free(node);
+}
+
+void free_bvh_tree(BVH_Tree *tree)
+{
+    free_bvh_node(tree->root);
+    free(tree);
+}
 // Creates a BVH Tree from the given primitives, and the scenes bounding box
 BVH_Tree *build_bvh_tree(const Primitive *primitives, size_t primitives_size, BoundingBox scene_aabb)
 {

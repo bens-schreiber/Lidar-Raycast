@@ -4,7 +4,7 @@
 #include "raylib.h"
 
 // A camera that can be moved around the scene
-Camera create_camera();
+Camera *create_camera();
 
 // Update the camera's position and target
 void update_camera(Camera *camera);
