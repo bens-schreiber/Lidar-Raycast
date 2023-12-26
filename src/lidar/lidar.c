@@ -50,7 +50,7 @@ void _lidar_animation_impl(BVH_Tree *tree, Camera *camera, Vector3 *collisions, 
             }
         }
 
-        // usleep(10000);
+        usleep(10000);
     }
 }
 
