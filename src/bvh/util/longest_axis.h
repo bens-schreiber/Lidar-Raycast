@@ -5,11 +5,11 @@ struct BoundingBox;
 
 typedef int (*qsort_compare)(const void *, const void *);
 
-int compareX(const void *a, const void *b);
+extern inline int compareX(const void *a, const void *b);
 
-int compareY(const void *a, const void *b);
+extern inline int compareY(const void *a, const void *b);
 
-int compareZ(const void *a, const void *b);
+extern inline int compareZ(const void *a, const void *b);
 
 /// @brief Determines which axis is the longest in a bounding box
 /// @param scene_aabb 

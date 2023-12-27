@@ -9,7 +9,7 @@
 #include "lidar/lidar.h"
 #include "rlgl.h"
 
-void update(volatile Vector3 *collisions, volatile size_t *collision_count, volatile bool *animating_lidar, bool draw_bvh, const BVH_Tree *tree, Camera *camera);
+void update(volatile Vector3 *collisions, volatile size_t *collision_count, volatile bool *animating_lidar, bool *draw_bvh, const BVH_Tree *tree, Camera *camera);
 void draw(volatile Vector3 *collisions, volatile size_t *collision_count, bool draw_bvh, const BVH_Tree *tree, Camera *camera);
 void DrawSmallPoint3D(Vector3 position, Color color);
 
@@ -33,7 +33,7 @@ int main(void)
 
     while (!WindowShouldClose())
     {
-        update(collisions, collision_count, animating_lidar, draw_bvh, tree, camera);
+        update(collisions, collision_count, animating_lidar, &draw_bvh, tree, camera);
         draw(collisions, collision_count, draw_bvh, tree, camera);
     }
 
@@ -48,7 +48,7 @@ int main(void)
     return 0;
 }
 
-void update(volatile Vector3 *collisions, volatile size_t *collision_count, volatile bool *animating_lidar, bool draw_bvh, const BVH_Tree *tree, Camera *camera)
+void update(volatile Vector3 *collisions, volatile size_t *collision_count, volatile bool *animating_lidar, bool * draw_bvh, const BVH_Tree *tree, Camera *camera)
 {
     // Clear collisions
     if (!*animating_lidar && IsKeyPressed(KEY_F))
@@ -59,7 +59,7 @@ void update(volatile Vector3 *collisions, volatile size_t *collision_count, vola
     // Reveal BVH tree
     if (IsKeyPressed(KEY_T))
     {
-        draw_bvh = !draw_bvh;
+        *draw_bvh = !*draw_bvh;
     }
 
     // Shoot rays from camera
