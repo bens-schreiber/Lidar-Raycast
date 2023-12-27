@@ -2,7 +2,7 @@
 #include "longest_axis.h"
 #include "../../primitive/primitive.h"
 
-inline int compareX(const void *a, const void *b)
+int compareX(const void *a, const void *b)
 {
     Primitive *primitive_a = (Primitive *)a;
     Primitive *primitive_b = (Primitive *)b;
@@ -10,7 +10,7 @@ inline int compareX(const void *a, const void *b)
     return primitive_a->centroid.x - primitive_b->centroid.x;
 }
 
-inline int compareY(const void *a, const void *b)
+int compareY(const void *a, const void *b)
 {
     Primitive *primitive_a = (Primitive *)a;
     Primitive *primitive_b = (Primitive *)b;
@@ -18,7 +18,7 @@ inline int compareY(const void *a, const void *b)
     return primitive_a->centroid.y - primitive_b->centroid.y;
 }
 
-inline int compareZ(const void *a, const void *b)
+int compareZ(const void *a, const void *b)
 {
     Primitive *primitive_a = (Primitive *)a;
     Primitive *primitive_b = (Primitive *)b;
