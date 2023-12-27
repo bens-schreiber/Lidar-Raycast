@@ -33,9 +33,9 @@ typedef struct BVH_Tree
 /// @param primitives_size The amount of primitives in the scene
 /// @param scene_aabb The bounding box enclosing the entire scene
 /// @return A pointer to the BVH tree
-BVH_Tree *bvh_tree_create(const struct Primitive *primitives, size_t primitives_size, struct BoundingBox scene_aabb);
+BVH_Tree *bvh_tree_create(struct Primitive *primitives, size_t primitives_size, struct BoundingBox scene_aabb);
 
-BVH_Node *bvh_tree_create_impl(const struct Primitive *primitives, size_t primitives_size, struct BoundingBox bounding_box);
+BVH_Node *bvh_tree_create_impl(struct Primitive *primitives, size_t primitives_size, struct BoundingBox bounding_box);
 
 /// @brief Frees all the nodes in a BVH tree
 /// @param tree the BVH tree to free

@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <string.h>
 #include <math.h>
 #include "./util/longest_axis.h"
 #include "raylib.h"
@@ -24,7 +23,7 @@ void bvh_tree_free(BVH_Tree *tree)
     free(tree);
 }
 
-BVH_Tree *bvh_tree_create(const Primitive *primitives, size_t primitives_size, BoundingBox scene_aabb)
+BVH_Tree *bvh_tree_create(Primitive *primitives, size_t primitives_size, BoundingBox scene_aabb)
 {
     BVH_Tree *tree = malloc(sizeof(BVH_Tree));
     tree->root = bvh_tree_create_impl(primitives, primitives_size, scene_aabb);
@@ -79,7 +78,7 @@ BVH_Node *bvh_node_create(const Primitive *primitives, size_t primitives_size, B
     return new_node;
 }
 
-BVH_Node *bvh_tree_create_impl(const Primitive *primitives, size_t primitives_size, BoundingBox bounding_box)
+BVH_Node *bvh_tree_create_impl(Primitive *primitives, size_t primitives_size, BoundingBox bounding_box)
 {
 
     // If there are less than 2 primitives, the BVH node should be a leaf node, and contain the primitives.
@@ -91,19 +90,18 @@ BVH_Node *bvh_tree_create_impl(const Primitive *primitives, size_t primitives_si
     BVH_Node *new_node = bvh_node_create(primitives, primitives_size, bounding_box);
 
     // Sort the primitivess by the longest axis.
-    Primitive *axis_sorted = memcpy(malloc(sizeof(Primitive) * primitives_size), primitives, sizeof(Primitive) * primitives_size);
-    qsort(axis_sorted, primitives_size, sizeof(Primitive), compare_by_longest_axis(bounding_box));
+    qsort(primitives, primitives_size, sizeof(Primitive), compare_by_longest_axis(bounding_box));
 
     // Find the median of the primitivess.
     size_t median = primitives_size / 2;
-    Primitive median_primitive = axis_sorted[median];
+    Primitive median_primitive = primitives[median];
 
     // Calculate the left AABB.
     // It should contain all primitivess from 0 to median.
     BoundingBox left_aabb = primitive_get_bounding_box(&median_primitive);
     for (size_t i = 0; i <= median; i++)
     {
-        left_aabb = expand_aabb(left_aabb, primitive_get_bounding_box(&axis_sorted[i]));
+        left_aabb = expand_aabb(left_aabb, primitive_get_bounding_box(&primitives[i]));
     }
 
     // Calculate the right AABB.
@@ -111,14 +109,12 @@ BVH_Node *bvh_tree_create_impl(const Primitive *primitives, size_t primitives_si
     BoundingBox right_aabb = primitive_get_bounding_box(&median_primitive);
     for (size_t i = median + 1; i < primitives_size; i++)
     {
-        right_aabb = expand_aabb(right_aabb, primitive_get_bounding_box(&axis_sorted[i]));
+        right_aabb = expand_aabb(right_aabb, primitive_get_bounding_box(&primitives[i]));
     }
 
     // Recurse on the left and right AABBs.
-    new_node->left = bvh_tree_create_impl(axis_sorted, median, left_aabb);
-    new_node->right = bvh_tree_create_impl(axis_sorted + median, primitives_size - median, right_aabb);
-
-    free(axis_sorted);
+    new_node->left = bvh_tree_create_impl(primitives, median, left_aabb);
+    new_node->right = bvh_tree_create_impl(primitives + median, primitives_size - median, right_aabb);
 
     return new_node;
 }
