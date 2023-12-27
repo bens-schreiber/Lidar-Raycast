@@ -25,7 +25,7 @@ typedef struct
 
 /// Index of the next collision to write to.
 /// This index in tandem with update_write_index() allows for a circular buffer
-int write_index = 0;
+static int write_index = 0;
 
 /// @brief Updates the collision count to stay within the bounds of the array, resetting to 0 on overflow
 /// @param collision The current collision count

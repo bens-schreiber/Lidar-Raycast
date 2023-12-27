@@ -9,18 +9,8 @@
 #include "lidar/lidar.h"
 #include "rlgl.h"
 
-Camera *camera;
-Primitive *primitives;
-BVH_Tree *tree;
-
-volatile Vector3 *collisions;
-volatile size_t *collision_count;
-
-bool draw_bvh;
-volatile bool *animating_lidar;
-
-void update(void);
-void draw(void);
+void update(volatile Vector3 *collisions, volatile size_t *collision_count, volatile bool *animating_lidar, bool draw_bvh, const BVH_Tree *tree, Camera *camera);
+void draw(volatile Vector3 *collisions, volatile size_t *collision_count, bool draw_bvh, const BVH_Tree *tree, Camera *camera);
 void DrawSmallPoint3D(Vector3 position, Color color);
 
 int main(void)
@@ -30,27 +20,25 @@ int main(void)
     DisableCursor();
     SetTargetFPS(FPS);
 
-    camera = camera_create();
-    primitives = scene_create();
-    tree = bvh_tree_create(primitives, PRIMITIVE_COUNT, SCENE_BOUNDING_BOX);
+    Camera *camera = camera_create();
+    Primitive *scene = scene_create();
+    BVH_Tree *tree = bvh_tree_create(scene, PRIMITIVE_COUNT, SCENE_BOUNDING_BOX);
 
-    collisions = malloc(sizeof(Vector3) * MAX_COLLISIONS);
-    collision_count = malloc(sizeof(size_t));
-    *collision_count = 0;
+    volatile Vector3 *collisions = malloc(sizeof(Vector3) * MAX_COLLISIONS);
+    volatile size_t *collision_count = malloc(sizeof(size_t));
 
-    draw_bvh = true;
-
-    animating_lidar = malloc(sizeof(bool));
+    bool draw_bvh = true;
+    volatile bool *animating_lidar = malloc(sizeof(bool));
     *animating_lidar = false;
 
     while (!WindowShouldClose())
     {
-        update();
-        draw();
+        update(collisions, collision_count, animating_lidar, draw_bvh, tree, camera);
+        draw(collisions, collision_count, draw_bvh, tree, camera);
     }
 
     CloseWindow();
-    free(primitives);
+    free(scene);
     free((void *)collisions);
     free((void *)animating_lidar);
     bvh_tree_free(tree);
@@ -60,7 +48,7 @@ int main(void)
     return 0;
 }
 
-void update(void)
+void update(volatile Vector3 *collisions, volatile size_t *collision_count, volatile bool *animating_lidar, bool draw_bvh, const BVH_Tree *tree, Camera *camera)
 {
     // Clear collisions
     if (!*animating_lidar && IsKeyPressed(KEY_F))
@@ -84,7 +72,7 @@ void update(void)
     camera_update(camera);
 }
 
-void draw(void)
+void draw(volatile Vector3 *collisions, volatile size_t *collision_count, bool draw_bvh, const BVH_Tree *tree, Camera *camera)
 {
     BeginDrawing();
     ClearBackground(BLACK);
