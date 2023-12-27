@@ -16,7 +16,7 @@ typedef struct Primitive
 } Primitive;
 
 /// @returns The bounding box enclosing a primitive
-BoundingBox primitive_get_bounding_box(Primitive primitive);
+BoundingBox primitive_get_bounding_box(const Primitive *primitive);
 
 /// Create a primitive
 /// @param centroid: the center of the primitive, rendered around this point
@@ -26,9 +26,9 @@ static inline Primitive primitive_create(Vector3 centroid, Color color)
 }
 
 /// Render a primitive around its centroid
-static inline void primitive_draw(Primitive primitive)
+static inline void primitive_draw(const Primitive *primitive)
 {
-    DrawCubeV(primitive.centroid, PRIMITIVE_DIMENSIONS, primitive.color);
+    DrawCubeV(primitive->centroid, PRIMITIVE_DIMENSIONS, primitive->color);
 }
 
 #endif // PRIMITIVE_H

@@ -17,10 +17,10 @@ Primitive *scene_create(void)
     return primitives;
 }
 
-void scene_draw(Primitive primitives[PRIMITIVE_COUNT])
+void scene_draw(const Primitive primitives[PRIMITIVE_COUNT])
 {
     for (int i = 0; i < PRIMITIVE_COUNT; i++)
     {
-        primitive_draw(primitives[i]);
+        primitive_draw(&primitives[i]);
     }
 }

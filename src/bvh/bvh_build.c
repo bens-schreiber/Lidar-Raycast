@@ -96,22 +96,22 @@ BVH_Node *bvh_tree_create_impl(const Primitive *primitives, size_t primitives_si
 
     // Find the median of the primitivess.
     size_t median = primitives_size / 2;
-    Primitive median_primitives = axis_sorted[median];
+    Primitive median_primitive = axis_sorted[median];
 
     // Calculate the left AABB.
     // It should contain all primitivess from 0 to median.
-    BoundingBox left_aabb = primitive_get_bounding_box(median_primitives);
+    BoundingBox left_aabb = primitive_get_bounding_box(&median_primitive);
     for (size_t i = 0; i <= median; i++)
     {
-        left_aabb = expand_aabb(left_aabb, primitive_get_bounding_box(axis_sorted[i]));
+        left_aabb = expand_aabb(left_aabb, primitive_get_bounding_box(&axis_sorted[i]));
     }
 
     // Calculate the right AABB.
     // It should contain all primitivess from median to primitives_size.
-    BoundingBox right_aabb = primitive_get_bounding_box(median_primitives);
+    BoundingBox right_aabb = primitive_get_bounding_box(&median_primitive);
     for (size_t i = median + 1; i < primitives_size; i++)
     {
-        right_aabb = expand_aabb(right_aabb, primitive_get_bounding_box(axis_sorted[i]));
+        right_aabb = expand_aabb(right_aabb, primitive_get_bounding_box(&axis_sorted[i]));
     }
 
     // Recurse on the left and right AABBs.

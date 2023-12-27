@@ -54,6 +54,6 @@ unsigned char bvh_tree_detect_collision(const BVH_Tree *tree, struct BoundingBox
 Vector3 bvh_tree_detect_collision_ray(const BVH_Tree *tree, struct Ray ray);
 
 /// @brief Draws all of the bounding boxes and primitives in a BVH tree
-void draw_bvh_tree(BVH_Tree *tree);
+void draw_bvh_tree(const BVH_Tree *tree);
 
 #endif // BVH_H

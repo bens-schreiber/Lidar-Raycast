@@ -13,11 +13,11 @@ Camera *camera;
 Primitive *primitives;
 BVH_Tree *tree;
 
-Vector3 *collisions;
-size_t *collision_count;
+volatile Vector3 *collisions;
+volatile size_t *collision_count;
 
 bool draw_bvh;
-bool *animating_lidar;
+volatile bool *animating_lidar;
 
 void update(void);
 void draw(void);
@@ -51,11 +51,11 @@ int main(void)
 
     CloseWindow();
     free(primitives);
-    free(collisions);
-    free(animating_lidar);
+    free((void *)collisions);
+    free((void *)animating_lidar);
     bvh_tree_free(tree);
-    free(camera);
-    free(collision_count);
+    free((void *)camera);
+    free((void *)collision_count);
 
     return 0;
 }

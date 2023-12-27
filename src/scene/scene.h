@@ -20,6 +20,6 @@ struct Vector3;
 struct Primitive *scene_create(void);
 
 /// Renders all primitives in the scene around their centroids.
-void scene_draw(struct Primitive primitives[PRIMITIVE_COUNT]);
+void scene_draw(const struct Primitive primitives[PRIMITIVE_COUNT]);
 
 #endif // SCENE_H

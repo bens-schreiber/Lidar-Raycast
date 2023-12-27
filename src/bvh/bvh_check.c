@@ -25,7 +25,7 @@ unsigned char check_bvh_collision_impl(const BVH_Node *node, BoundingBox boundin
             for (size_t i = 0; i < node->primitives_size; i++)
             {
                 // If the primitive intersects the bounding box, there is a collision
-                if (CheckCollisionBoxes(primitive_get_bounding_box(node->primitives[i]), bounding_box))
+                if (CheckCollisionBoxes(primitive_get_bounding_box(&node->primitives[i]), bounding_box))
                 {
                     return 1;
                 }
@@ -60,7 +60,7 @@ Vector3 check_bvh_collision_ray_impl(const BVH_Node *node, Ray ray)
             // Check each primitive in the leaf node
             for (size_t i = 0; i < node->primitives_size; i++)
             {
-                collision = GetRayCollisionBox(ray, primitive_get_bounding_box(node->primitives[i]));
+                collision = GetRayCollisionBox(ray, primitive_get_bounding_box(&node->primitives[i]));
 
                 // If the ray hits the primitive, there is a collision
                 // Return the collision point
